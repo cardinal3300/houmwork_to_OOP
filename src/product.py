@@ -18,5 +18,39 @@ class Product:
 
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
+
+
+    @property
+    def price(self) -> float:
+        """Геттер для цены."""
+        return self.__price
+
+
+    @price.setter
+    def price(self, value: float):
+        """Сеттер для цены с проверкой и подтверждением понижения цены. Не допускает установку цены ниже или равной нулю."""
+
+        if value <= 0:
+            print("Цена не должна быть нулевая или отрицательная")
+            return
+
+        if value < self.__price:
+            answer = input(f"Вы понижаете цену с {self.__price} до {value}. Подтверждаете? (y/n): ").strip().lower()
+            if answer != "y":
+                print("Снижение цены отменено")
+                return
+        self.__price = value
+
+    @classmethod
+    def new_product(cls, product_data: dict) -> "Product":
+        """
+        Создаёт новый продукт на основе словаря параметров.
+        """
+        return cls(
+            product_data["name"],
+            product_data["description"],
+            product_data["price"],
+            product_data["quantity"]
+        )
