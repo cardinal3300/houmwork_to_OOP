@@ -1,4 +1,3 @@
-
 from src.product import Product
 
 
@@ -14,7 +13,7 @@ class Category:
     """
 
     category_count = 0  # количество созданных категорий
-    product_count = 0   # Общее количество товаров во всех категориях
+    product_count = 0  # Общее количество товаров во всех категориях
 
     def __init__(self, name: str, description: str, products: list[Product]):
         """Инициализация категории.
@@ -26,16 +25,14 @@ class Category:
 
         self.name = name
         self.description = description
-        self.__products = []
+        self.__products: list[Product] = []
         for product in products:
             self.add_product(product)
 
         Category.category_count += 1
 
-
-    def add_product(self, product: Product):
-        """Добавляет продукт в категорию, если он является экземпляром Product.
-        """
+    def add_product(self, product: Product) -> None:
+        """Добавляет продукт в категорию, если он является экземпляром Product."""
 
         self.__products.append(product)
         Category.product_count += 1
@@ -46,10 +43,4 @@ class Category:
         Возвращает список товаров в виде строк:
         'Название, цена руб. Остаток: N шт.'
         """
-        return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт.\n"
-                for p in self.__products]
-
-
-    # @property
-    # def products_list(self) -> list:
-    #     return self.__products
+        return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]

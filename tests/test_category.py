@@ -1,9 +1,8 @@
+from src.category import Category
 from src.product import Product
 
-from src.category import Category
 
-
-def test_category_init_and_counts():
+def test_category_init_and_counts() -> None:
     # Сбросим счётчики, если они есть
     Category.category_count = 0
     Category.product_count = 0
@@ -18,3 +17,13 @@ def test_category_init_and_counts():
     assert len(c.products) == 2
     assert Category.category_count == 1
     assert Category.product_count == 2
+
+
+def test_category_products_getter() -> None:
+    p1 = Product("A", "Desc", 10, 2)
+    p2 = Product("B", "Desc", 20, 3)
+    category = Category("Cat", "Desc", [p1, p2])
+
+    products_str = category.products
+    assert "A, 10 руб. Остаток: 2 шт." in products_str
+    assert "B, 20 руб. Остаток: 3 шт." in products_str
