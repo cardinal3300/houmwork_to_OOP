@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterator
 
 from src.product import Product
 
@@ -49,3 +49,21 @@ class Category:
         'Название, цена руб. Остаток: N шт.'
         """
         return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]
+
+
+class CategoryIterator:
+    def __init__(self, products: list[Product]) -> None:
+        self._products = products
+        self._index = 0
+
+    def __iter__(self) -> Iterator[Product]:
+        self._index = 0
+        return self
+
+    def __next__(self) -> Product:
+        if self._index < len(self._products):
+            product = self._products[self._index]
+            self._index += 1
+            return product
+        else:
+            raise StopIteration
