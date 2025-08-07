@@ -32,6 +32,10 @@ class Category:
                 self.add_product(product)
         Category.category_count += 1
 
+    def __str__(self) -> str:
+        total_quantity = sum(p.quantity for p in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
     def add_product(self, product: Product) -> None:
         """Добавляет продукт в категорию, если он является экземпляром Product."""
         if not isinstance(product, Product):
@@ -41,8 +45,7 @@ class Category:
 
     @property
     def products(self) -> list[str]:
-        """
-        Возвращает список товаров в виде строк:
+        """Возвращает список товаров в виде строк:
         'Название, цена руб. Остаток: N шт.'
         """
         return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]
