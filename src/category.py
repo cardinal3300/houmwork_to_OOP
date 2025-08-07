@@ -52,15 +52,25 @@ class Category:
 
 
 class CategoryIterator:
+    """Итератор для перебора товаров в категории.
+        Позволяет последовательно перебирать объекты Product, содержащиеся в списке товаров категории.
+        """
     def __init__(self, products: list[Product]) -> None:
+        """Инициализирует итератор со списком товаров."""
         self._products = products
         self._index = 0
 
     def __iter__(self) -> Iterator[Product]:
+        """Возвращает сам итератор (сброс индекса)."""
         self._index = 0
         return self
 
     def __next__(self) -> Product:
+        """Возвращает следующий товар в списке.
+            Returns:
+                Product: Очередной товар из списка.
+            Raises:
+                StopIteration: Если товары закончились."""
         if self._index < len(self._products):
             product = self._products[self._index]
             self._index += 1
