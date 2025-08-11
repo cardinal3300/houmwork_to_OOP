@@ -27,3 +27,10 @@ def test_category_products_getter() -> None:
     products_str = category.products
     assert "A, 10 руб. Остаток: 2 шт." in products_str
     assert "B, 20 руб. Остаток: 3 шт." in products_str
+
+
+def test_category_str() -> None:
+    p1 = Product("Phone", "desc", 100.0, 2)
+    p2 = Product("Tablet", "desc", 200.0, 3)
+    category = Category("Электроника", "Гаджеты", [p1, p2])
+    assert str(category) == "Электроника, количество продуктов: 5 шт."

@@ -35,3 +35,14 @@ def test_price_setter(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr("builtins.input", lambda _: "n")
     p.price = 90
     assert p.price == 100  # цена не меняется
+
+
+def test_product_str() -> None:
+    product = Product("Test Product", "Some description", 80.0, 15)
+    assert str(product) == "Test Product, 80.0 руб. Остаток: 15 шт."
+
+
+def test_product_addition() -> None:
+    p1 = Product("P1", "desc", 100.0, 2)  # 200
+    p2 = Product("P2", "desc", 150.0, 3)  # 450
+    assert p1 + p2 == 650.0
