@@ -1,48 +1,56 @@
-from _pytest.monkeypatch import MonkeyPatch
+import pytest
 
 from src.product import Product
 
 
-def test_product_init() -> None:
-    product = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
-    assert product.name == "Iphone 15"
-    assert product.description == "512GB, Gray space"
-    assert product.price == 210000.0
-    assert product.quantity == 8
+def test_product_str(product_phone):
+    assert str(product_phone) == "Телефон, 10000 руб. Остаток: 2 шт."
 
 
-def test_price_setter(monkeypatch: MonkeyPatch) -> None:
-    p = Product("Test", "Desc", 100, 1)
+def test_product_add_same_type(product_phone):
+    p2 = Product("Телефон", "Смартфон", 10000, 3)
+    assert product_phone + p2 == 10000 * 2 + 10000 * 3
 
-    # Установка корректной цены
-    p.price = 150
-    assert p.price == 150
 
-    # Попытка установить отрицательную цену — цена не меняется
-    p.price = -10
-    assert p.price == 150
+def test_product_add_different_type(product_phone, smartphone_iphone):
+    with pytest.raises(TypeError):
+        _ = product_phone + smartphone_iphone
 
-    # Попытка установить 0 — цена не меняется
-    p.price = 0
-    assert p.price == 150
 
-    # Понижение цены с подтверждением "y"
+def test_price_setter_positive(product_phone):
+    product_phone.price = 15000
+    assert product_phone.price == 15000
+
+
+def test_price_setter_zero_or_negative(product_phone, capsys):
+    product_phone.price = -500
+    captured = capsys.readouterr()
+    assert "Цена не должна быть нулевая или отрицательная" in captured.out
+
+
+def test_price_setter_decrease_confirm(product_phone, monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: "y")
-    p.price = 100
-    assert p.price == 100
+    product_phone.price = 9000
+    assert product_phone.price == 9000
 
-    # Понижение цены с отменой "n"
+
+def test_price_setter_decrease_cancel(product_phone, monkeypatch, capsys):
     monkeypatch.setattr("builtins.input", lambda _: "n")
-    p.price = 90
-    assert p.price == 100  # цена не меняется
+    product_phone.price = 9000
+    assert product_phone.price == 10000
+    captured = capsys.readouterr()
+    assert "Снижение цены отменено" in captured.out
 
 
-def test_product_str() -> None:
-    product = Product("Test Product", "Some description", 80.0, 15)
-    assert str(product) == "Test Product, 80.0 руб. Остаток: 15 шт."
+def test_new_product():
+    data = {"name": "Телефон", "description": "Смартфон", "price": 10000, "quantity": 2}
+    p = Product.new_product(data)
+    assert isinstance(p, Product)
 
 
-def test_product_addition() -> None:
-    p1 = Product("P1", "desc", 100.0, 2)  # 200
-    p2 = Product("P2", "desc", 150.0, 3)  # 450
-    assert p1 + p2 == 650.0
+def test_smartphone_init(smartphone_iphone):
+    assert smartphone_iphone.model == "13 Pro"
+
+
+def test_lawngrass_init(lawn_grass):
+    assert lawn_grass.country == "Россия"
