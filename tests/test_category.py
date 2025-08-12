@@ -74,11 +74,11 @@ def test_add_operator_different_type_raises(sample_products):
 
 def test_category_iterator(sample_products):
     """Проверка работы итератора по категории."""
-    phone1, phone2, grass = sample_products
-    cat = Category("Хиты продаж", "Лучшие товары", [phone1, phone2, grass])#
+    smartphone1, smartphone2, grass = sample_products
+    cat = Category("Хиты продаж", "Лучшие товары", [smartphone1, smartphone2, grass])#
     iterator = CategoryIterator(cat)
     products = list(iterator)
-    assert products == [phone1, phone2, grass]
+    assert products == [smartphone1, smartphone2, grass]
     assert len(products) == 3
 
 
