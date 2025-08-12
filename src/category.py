@@ -1,4 +1,4 @@
-from typing import Optional, Iterator
+from typing import Iterator
 
 from src.product import Product
 
@@ -11,19 +11,16 @@ class Category:
     Атрибуты экземпляра:
         name (str): Название категории.
         description (str): Описание категории.
-        products (list[Product]): Список товаров категории.
-    """
-
+        products (list[Product]): Список товаров категории."""
     category_count = 0  # количество созданных категорий
     product_count = 0  # Общее количество товаров во всех категориях
 
-    def __init__(self, name: str, description: str, products: Optional[list[Product]]) -> None:
+    def __init__(self, name: str, description: str, products: list[Product] = None) -> None:
         """Инициализация категории.
         Args:
             name (str): Название категории.
             description (str): Описание категории.
-            products (List[Product], optional): Список товаров в категории.
-        """
+            products (List[Product]): Список товаров в категории."""
         self.name = name
         self.description = description
         self.__products: list[Product] = []
@@ -38,31 +35,39 @@ class Category:
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product: Product) -> None:
-        """Добавляет продукт в категорию.
-        Аргументы:
-            product (Product): объект продукта или его наследника.
-        Вызывает:
-            TypeError: если передан не продукт."""
+        """Добавляет продукт в категорию с проверкой типа.
+        Разрешены только экземпляры Product или его наследников.
+        Если передан класс вместо экземпляра, вызывается ошибка."""
+        if isinstance(product, type):
+            if issubclass(product, Product):
+                raise TypeError(
+                    f"Нельзя передавать класс {product.__name__}, создайте экземпляр перед добавлением."
+                )
+            else:
+                raise TypeError(f"{product} не является подклассом Product.")
+        # Если передан объект, проверяем что это экземпляр Product или наследника
         if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его подклассов.")
+            raise TypeError(f"{product} — это не продукт и не его наследник.")
         self.__products.append(product)
         Category.product_count += 1
 
     @property
     def products(self) -> list[str]:
         """Возвращает список товаров в виде строк:
-        'Название, цена руб. Остаток: N шт.'
-        """
+        'Название, цена руб. Остаток: N шт.'"""
         return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]
+
+    @property
+    def product_objects(self) -> list[Product]:
+        """Возвращает список объектов продуктов в категории."""
+        return self.__products
 
 
 class CategoryIterator:
     """Итератор для перебора товаров в категории.
-        Позволяет последовательно перебирать объекты Product, содержащиеся в списке товаров категории.
-        """
-    def __init__(self, products: list[Product]) -> None:
-        """Инициализирует итератор со списком товаров."""
-        self._products = products
+    Позволяет последовательно перебирать объекты Product, содержащиеся в списке товаров категории."""
+    def __init__(self, category: Category) -> None:
+        self._category = category
         self._index = 0
 
     def __iter__(self) -> Iterator[Product]:
@@ -71,13 +76,8 @@ class CategoryIterator:
         return self
 
     def __next__(self) -> Product:
-        """Возвращает следующий товар в списке.
-            Returns:
-                Product: Очередной товар из списка.
-            Raises:
-                StopIteration: Если товары закончились."""
-        if self._index < len(self._products):
-            product = self._products[self._index]
+        if self._index < len(self._category.product_objects):
+            product = self._category.product_objects[self._index]
             self._index += 1
             return product
         else:
