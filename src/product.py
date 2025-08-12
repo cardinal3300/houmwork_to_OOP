@@ -24,12 +24,12 @@ class Product:
 
     def __add__(self, other: "Product") -> float:
         """Складывает стоимость товаров одного типа.
-            Аргументы:
-                other (Product): другой товар.
-            Возвращает:
-                float: сумма полной стоимости товаров.
-            Вызывает:
-                TypeError: если товары относятся к разным классам."""
+        Аргументы:
+            other (Product): другой товар.
+        Возвращает:
+            float: сумма полной стоимости товаров.
+        Вызывает:
+            TypeError: если товары относятся к разным классам."""
         if type(self) is not type(other):
             raise TypeError("Складывать можно только товары одного типа")
         return (self.price * self.quantity) + (other.price * other.quantity)
@@ -99,7 +99,7 @@ class LawnGrass(Product):
         price: float,
         quantity: int,
         country: str,
-        germination_period: int,
+        germination_period: str,
         color: str,
     ) -> None:
         super().__init__(name, description, price, quantity)

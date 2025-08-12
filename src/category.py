@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import Iterator, Optional, Any
 
 from src.product import Product
 
@@ -12,10 +12,11 @@ class Category:
         name (str): Название категории.
         description (str): Описание категории.
         products (list[Product]): Список товаров категории."""
+
     category_count = 0  # количество созданных категорий
     product_count = 0  # Общее количество товаров во всех категориях
 
-    def __init__(self, name: str, description: str, products: list[Product] = None) -> None:
+    def __init__(self, name: str, description: str, products: Optional[list[Product]] = None) -> None:
         """Инициализация категории.
         Args:
             name (str): Название категории.
@@ -34,15 +35,13 @@ class Category:
         total_quantity = sum(p.quantity for p in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
-    def add_product(self, product: Product) -> None:
+    def add_product(self, product: Any) -> None:
         """Добавляет продукт в категорию с проверкой типа.
         Разрешены только экземпляры Product или его наследников.
         Если передан класс вместо экземпляра, вызывается ошибка."""
         if isinstance(product, type):
             if issubclass(product, Product):
-                raise TypeError(
-                    f"Нельзя передавать класс {product.__name__}, создайте экземпляр перед добавлением."
-                )
+                raise TypeError(f"Нельзя передавать класс {product.__name__}, создайте экземпляр перед добавлением.")
             else:
                 raise TypeError(f"{product} не является подклассом Product.")
         # Если передан объект, проверяем что это экземпляр Product или наследника
@@ -66,6 +65,7 @@ class Category:
 class CategoryIterator:
     """Итератор для перебора товаров в категории.
     Позволяет последовательно перебирать объекты Product, содержащиеся в списке товаров категории."""
+
     def __init__(self, category: Category) -> None:
         self._category = category
         self._index = 0
