@@ -51,13 +51,13 @@ class Category:
         Category.product_count += 1
 
     @property
-    def products(self) -> list[str]:
+    def products_string(self) -> list[str]:
         """Возвращает список товаров в виде строк:
         'Название, цена руб. Остаток: N шт.'"""
         return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]
 
     @property
-    def product_objects(self) -> list[Product]:
+    def products_object(self) -> list[Product]:
         """Возвращает список объектов продуктов в категории."""
         return self.__products
 
@@ -76,8 +76,8 @@ class CategoryIterator:
         return self
 
     def __next__(self) -> Product:
-        if self._index < len(self._category.product_objects):
-            product = self._category.product_objects[self._index]
+        if self._index < len(self._category.products_object):
+            product = self._category.products_object[self._index]
             self._index += 1
             return product
         else:

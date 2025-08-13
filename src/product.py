@@ -54,9 +54,14 @@ class Product:
         self.__price = value
 
     @classmethod
-    def new_product(cls, product_data: dict) -> "Product":
+    def new_product(cls, data: dict) -> "Product":
         """Создаёт новый продукт на основе словаря параметров."""
-        return cls(product_data["name"], product_data["description"], product_data["price"], product_data["quantity"])
+        return cls(
+            name=data.get("name"),
+            description=data.get("description"),
+            price=data.get("price"),
+            quantity=data.get("quantity")
+        )
 
 
 class Smartphone(Product):
