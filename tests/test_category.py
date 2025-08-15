@@ -1,36 +1,61 @@
-from src.category import Category
+import pytest
+
+from src.category import Category, CategoryIterator
 from src.product import Product
 
 
-def test_category_init_and_counts() -> None:
-    # Сбросим счётчики, если они есть
-    Category.category_count = 0
-    Category.product_count = 0
-
-    p1 = Product("iPhone 15", "512GB", 200000, 5)
-    p2 = Product("Samsung S23", "256GB", 180000, 3)
-
-    c = Category("Смартфоны", "Современные смартфоны", [p1, p2])
-
-    assert c.name == "Смартфоны"
-    assert c.description == "Современные смартфоны"
-    assert len(c.products) == 2
-    assert Category.category_count == 1
-    assert Category.product_count == 2
+def test_category_str(category_electronics):
+    assert str(category_electronics) == "Электроника, количество продуктов: 3 шт."
 
 
-def test_category_products_getter() -> None:
-    p1 = Product("A", "Desc", 10, 2)
-    p2 = Product("B", "Desc", 20, 3)
-    category = Category("Cat", "Desc", [p1, p2])
-
-    products_str = category.products
-    assert "A, 10 руб. Остаток: 2 шт." in products_str
-    assert "B, 20 руб. Остаток: 3 шт." in products_str
+def test_add_product_valid(category_empty, product_laptop):
+    category_empty.add_product(product_laptop)
+    assert len(category_empty.products_string) == 1
 
 
-def test_category_str() -> None:
-    p1 = Product("Phone", "desc", 100.0, 2)
-    p2 = Product("Tablet", "desc", 200.0, 3)
-    category = Category("Электроника", "Гаджеты", [p1, p2])
-    assert str(category) == "Электроника, количество продуктов: 5 шт."
+def test_add_product_invalid_class(category_empty):
+    with pytest.raises(TypeError):
+        category_empty.add_product(Product)
+
+
+def test_add_product_invalid_type(category_empty):
+    with pytest.raises(TypeError):
+        category_empty.add_product("не продукт")
+
+
+def test_add_product_raises_for_non_product_class():
+    """Проверка, что передача не-наследника Product вызывает ошибку."""
+    cat = Category("Техника", "Описание", [])
+
+    class NotAProduct:
+        pass
+
+    with pytest.raises(TypeError) as exc_info:
+        cat.add_product(NotAProduct)  # передаём класс, а не экземпляр
+
+    assert "не является подклассом Product" in str(exc_info.value)
+
+
+def test_products_property_format(category_electronics):
+    assert all(isinstance(item, str) for item in category_electronics.products_string)
+
+
+def test_product_objects_property(category_electronics):
+    assert isinstance(category_electronics.products_object[0], Product)
+
+
+def test_category_iterator(category_electronics):
+    iterator = CategoryIterator(category_electronics)
+    products = list(iterator)
+    assert products == category_electronics.products_object
+
+
+def test_products_string_and_object(cat, smartphone1):
+    # Проверка строкового списка
+    strings = cat.products_string
+    assert all(isinstance(s, str) for s in strings)
+    assert smartphone1.name in strings[0]
+
+    # Проверка списка объектов
+    objs = cat.products_object
+    assert smartphone1 in objs
