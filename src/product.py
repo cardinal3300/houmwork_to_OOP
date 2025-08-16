@@ -1,5 +1,5 @@
 from src.base_product import BaseProduct
-from src.mixins import LoggerMixin
+
 
 class Product(BaseProduct):
     """Класс, представляющий товар."""
@@ -7,11 +7,12 @@ class Product(BaseProduct):
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         super().__init__(name, description, price, quantity)
 
-
     def __repr__(self) -> str:
-        return (f"{self.__class__.__name__}("
-                f"name={self.name!r}, description={self.description!r}, "
-                f"price={self.price!r}, quantity={self.quantity!r})")
+        return (
+            f"{self.__class__.__name__}("
+            f"name={self.name!r}, description={self.description!r}, "
+            f"price={self.price!r}, quantity={self.quantity!r})"
+        )
 
 
 class Smartphone(Product):
@@ -34,13 +35,14 @@ class Smartphone(Product):
         self.memory = memory
         self.color = color
 
-
     def __repr__(self) -> str:
-        return (f"{self.__class__.__name__}("
-                f"name={self.name!r}, description={self.description!r}, "
-                f"price={self.price!r}, quantity={self.quantity!r}, "
-                f"efficiency={self.efficiency!r}, model={self.model!r}, "
-                f"memory={self.memory!r}, color={self.color!r})")
+        return (
+            f"{self.__class__.__name__}("
+            f"name={self.name!r}, description={self.description!r}, "
+            f"price={self.price!r}, quantity={self.quantity!r}, "
+            f"efficiency={self.efficiency!r}, model={self.model!r}, "
+            f"memory={self.memory!r}, color={self.color!r})"
+        )
 
 
 class LawnGrass(Product):
@@ -61,10 +63,11 @@ class LawnGrass(Product):
         self.germination_period = germination_period
         self.color = color
 
-
     def __repr__(self) -> str:
-        return (f"{self.__class__.__name__}("
-                f"name={self.name!r}, description={self.description!r}, "
-                f"price={self.price!r}, quantity={self.quantity!r}, "
-                f"country={self.country!r}, germination_period={self.germination_period!r}, "
-                f"color={self.color!r})")
+        return (
+            f"{self.__class__.__name__}("
+            f"name={self.name!r}, description={self.description!r}, "
+            f"price={self.price!r}, quantity={self.quantity!r}, "
+            f"country={self.country!r}, germination_period={self.germination_period!r}, "
+            f"color={self.color!r})"
+        )

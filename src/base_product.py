@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class BaseProduct(ABC):
@@ -40,8 +40,8 @@ class BaseProduct(ABC):
     def new_product(cls, data: dict) -> "BaseProduct":
         """Создаёт новый продукт на основе словаря параметров."""
         return cls(
-            name=data.get("name"),
-            description=data.get("description"),
-            price=data.get("price"),
-            quantity=data.get("quantity")
+            name=data["name"],
+            description=data["description"],
+            price=data["price"],
+            quantity=data["quantity"],
         )
