@@ -1,4 +1,4 @@
-from typing import Iterator, Optional, Any
+from typing import Any, Iterator, Optional
 
 from src.product import Product
 
