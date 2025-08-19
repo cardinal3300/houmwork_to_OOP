@@ -22,6 +22,7 @@ class Category:
             name (str): Название категории.
             description (str): Описание категории.
             products (List[Product]): Список товаров в категории."""
+
         self.name = name
         self.description = description
         self.__products: list[Product] = []
@@ -32,13 +33,25 @@ class Category:
 
     def __str__(self) -> str:
         """Возвращает строковое представление категории."""
+
         total_quantity = sum(p.quantity for p in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    def middle_price(self) -> float:
+        """Возвращает среднюю цену товаров в категории.
+        Если товаров нет, возвращает 0."""
+
+        try:
+            total_price = sum(product.price for product in self.__products)
+            return total_price / len(self.__products)
+        except ZeroDivisionError:
+            return 0.0
 
     def add_product(self, product: Any) -> None:
         """Добавляет продукт в категорию с проверкой типа.
         Разрешены только экземпляры Product или его наследников.
         Если передан класс вместо экземпляра, вызывается ошибка."""
+
         if isinstance(product, type):
             if issubclass(product, Product):
                 raise TypeError(f"Нельзя передавать класс {product.__name__}, создайте экземпляр перед добавлением.")
@@ -54,6 +67,7 @@ class Category:
     def products_string(self) -> list[str]:
         """Возвращает список товаров в виде строк:
         'Название, цена руб. Остаток: N шт.'"""
+
         return [f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт." for p in self.__products]
 
     @property

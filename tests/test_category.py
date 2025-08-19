@@ -25,6 +25,7 @@ def test_add_product_invalid_type(category_empty: Category) -> None:
 
 def test_add_product_raises_for_non_product_class() -> None:
     """Проверка, что передача не-наследника Product вызывает ошибку."""
+
     cat = Category("Техника", "Описание", [])
 
     class NotAProduct:
